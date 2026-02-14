@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Mock Interview Prep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            display: inline-block;
+            position: relative;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #cbd5e0;
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+
+        input[type="radio"]:checked {
+            border-color: #4f46e5;
+            background-color: #4f46e5;
+        }
+
+        input[type="radio"]:checked::before {
+            content: '';
+            display: block;
+            width: 0.5rem;
+            height: 0.5rem;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        input[type="radio"]:focus {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+        }
+
+        .transition-all-300 {
+            transition: all 0.3s ease;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-module-card:hover,
+        .behavioral-module-card:hover,
+        .system-design-module-card:hover,
+        .coding-module-card:hover {
+            /* Added for coding module */
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-image: linear-gradient(to right, #4f46e5, #7c3aed);
+        }
+
+        .btn-primary:hover {
+            background-image: linear-gradient(to right, #4338ca, #6d28d9);
+        }
+
+        /* Styles for the code editor */
+        #codeEditor {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 10px;
+            resize: vertical;
+            overflow: auto;
+            background-color: #282c34;
+            /* Dark background */
+            color: #abb2bf;
+            /* Light text */
+            border-radius: 8px;
+        }
+
+        .code-editor-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+            background-color: #3a404d;
+            color: #abb2bf;
+            border: 1px solid #4f5666;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.875rem;
+        }
+
+        .voice-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .voice-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+        }
+
+        .voice-button:active {
+            transform: scale(0.95);
+        }
+
+        .voice-button.speaking {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 min-h-screen font-sans">
+    <div id="app" class="relative overflow-hidden">
+        <!-- Home Page -->
+        <div id="home-page" class="min-h-screen flex flex-col">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                        <div class="max-w-xl text-center md:text-left md:w-1/2">
+                            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                                Master Your Next <span class="text-indigo-600">Technical Interview</span>
+                            </h1>
+                            <p class="text-xl text-gray-600 mb-10">
+                                Practice with our AI-powered mock interviews tailored for frontend developers. Get
+                                immediate feedback and improve your skills.
+                            </p>
+                            <button onclick="showModulePage()"
+                                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all-300">
+                                Start Interview Practice
+                            </button>
+                        </div>
+                        <div class="mt-8 md:mt-0 md:w-1/2 flex justify-center md:justify-end">
+                            <img src="https://i0.wp.com/issbpsychologist.com/wp-content/uploads/2021/09/Online-Mock-Interview-practice.jpg?w=2240&ssl=1"
+                                alt="Illustration of a confident person in an interview setting with an AI assistant, modern office background with plants and computer screens"
+                                class="rounded-xl shadow-lg w-full max-w-3xl">
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="module-page" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li><button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li><button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Practice Module</h2>
+                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                        Select from our specialized interview practice modules to focus on specific skill areas.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">Technical Round</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">
+                                Practice coding challenges, algorithms, and frontend-specific problems with our AI
+                                interviewer.
+                            </p>
+                            <ul class="space-y-2 mb-6 text-gray-700">
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    JavaScript Fundamentals
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Framework Questions (React, Vue, Angular)
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Problem Solving
+                                </li>
+                            </ul>
+                            <button onclick="showTechnicalLanguageSelection()"
+                                class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300">
+                                Start Technical Interview
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">Behavioral Round</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">
+                                Practice answering common behavioral questions with AI feedback on your communication
+                                and content.
+                            </p>
+                            <ul class="space-y-2 mb-6 text-gray-700">
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    STAR Method Practice
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Teamwork Scenarios
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Leadership Challenges
+                                </li>
+                            </ul>
+                            <button onclick="showBehavioralTopicSelection()"
+                                class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300">
+                                Start Behavioral Interview
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">System Design</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">
+                                Practice designing scalable frontend architectures and explaining your decisions to the
+                                interviewer.
+                            </p>
+                            <ul class="space-y-2 mb-6 text-gray-700">
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Application Architecture
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Performance Optimization
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Component Design
+                                </li>
+                            </ul>
+                            <button onclick="showSystemDesignTopicSelection()"
+                                class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300">
+                                Start System Design Interview
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- New Coding Round Module Card -->
+                    <div class="module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="bg-indigo-100 p-3 rounded-lg mr-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 20l4-16m4 4l4 4-4 4M6 16L2 12l4-4" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-semibold text-gray-900">Coding Round</h3>
+                            </div>
+                            <p class="text-gray-600 mb-6">
+                                Tackle live coding challenges, write and test your solutions, and get AI feedback on
+                                your code.
+                            </p>
+                            <ul class="space-y-2 mb-6 text-gray-700">
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Algorithm Implementation
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Data Structure Usage
+                                </li>
+                                <li class="flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2"
+                                        viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                    Code Optimization
+                                </li>
+                            </ul>
+                            <button onclick="showCodingLanguageSelection()"
+                                class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300">
+                                Start Coding Interview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Technical Language Selection Screen -->
+        <div id="languageSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">Technical Interview: Select
+                        Language</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a programming language for your technical interview:
+                    </p>
+                    <div id="languageOptionsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Language options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Technical Language Level Selection Screen -->
+        <div id="languageLevelSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8"><span
+                            id="selectedLanguageTitle"></span> Interview: Select Difficulty</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a difficulty level for your <span
+                            id="selectedLanguageSubtitle" class="font-semibold text-indigo-600"></span> interview:</p>
+                    <div id="technicalDifficultyOptionsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Difficulty options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Behavioral Topic Selection Screen -->
+        <div id="behavioralTopicSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">Behavioral Interview: Select
+                        Topic</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a behavioral topic to focus on:</p>
+                    <div id="behavioralTopicOptionsContainer"
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Behavioral topic options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Behavioral Level Selection Screen (NEW) -->
+        <div id="behavioralLevelSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8"><span
+                            id="selectedBehavioralTopicTitle"></span> Interview: Select Difficulty</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a difficulty level for your <span
+                            id="selectedBehavioralTopicSubtitle" class="font-semibold text-indigo-600"></span>
+                        interview:</p>
+                    <div id="behavioralDifficultyOptionsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Difficulty options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- System Design Topic Selection Screen -->
+        <div id="systemDesignTopicSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">System Design Interview: Select
+                        Topic</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a system design topic to focus on:</p>
+                    <div id="systemDesignTopicOptionsContainer"
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- System Design topic options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- System Design Level Selection Screen (NEW) -->
+        <div id="systemDesignLevelSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8"><span
+                            id="selectedSystemDesignTopicTitle"></span> Interview: Select Difficulty</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a difficulty level for your <span
+                            id="selectedSystemDesignTopicSubtitle" class="font-semibold text-indigo-600"></span>
+                        interview:</p>
+                    <div id="systemDesignDifficultyOptionsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Difficulty options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Coding Language Selection Screen (NEW) -->
+        <div id="codingLanguageSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8">Coding Interview: Select Language
+                    </h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a programming language for your coding interview:</p>
+                    <div id="codingLanguageOptionsContainer"
+                        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Coding language options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Coding Level Selection Screen (NEW) -->
+        <div id="codingLevelSelectionScreen" class="min-h-screen hidden bg-gray-100">
+            <header class="bg-white shadow-sm py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl mx-auto flex justify-between items-center">
+                    <div class="flex items-center">
+                        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/74fa5f81-7f7e-456c-848d-3592930a8260.png"
+                            alt="AI Interview Prep logo featuring a stylized headshot with circuit board pattern overlay"
+                            class="h-10 w-10 rounded-lg">
+                        <h1 class="ml-3 text-xl font-bold text-gray-900">Interview Pal</h1>
+                    </div>
+                    <nav>
+                        <ul class="flex space-x-6">
+                            <li>
+                                <button onclick="showHomePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Home</button>
+                            </li>
+                            <li>
+                                <button onclick="showModulePage()"
+                                    class="text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200">Modules</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+            <main class="flex-grow flex items-center justify-center p-6">
+                <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-5xl border border-gray-200">
+                    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-8"><span
+                            id="selectedCodingLanguageTitle"></span> Coding Interview: Select Difficulty</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose a difficulty level for your <span
+                            id="selectedCodingLanguageSubtitle" class="font-semibold text-indigo-600"></span> coding
+                        interview:</p>
+                    <div id="codingDifficultyOptionsContainer" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Difficulty options will be dynamically loaded here -->
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Coding Quiz Screen (NEW) -->
+        <div id="codingQuizScreen"
+            class="hidden bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-4xl border border-gray-200">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                    <span id="currentCodingDifficultyDisplay" class="capitalize text-indigo-600"></span> <span
+                        id="currentCodingLanguageDisplay" class="text-purple-600"></span> Coding Interview
+                </h2>
+                <div class="mb-6 p-6 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-lg font-semibold text-indigo-800">Coding Problem:</p>
+                        <button id="codingVoiceButton" onclick="readCodingQuestion()" class="voice-button"
+                            title="Listen to coding problem">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M5 15l4-4h3.586a1 1 0 00.707-.293l4-4a1 1 0 011.414 0l4 4a1 1 0 00.707.293H20v1a1 1 0 01-1 1h-3.586l-4 4a1 1 0 01-.707.293H7a1 1 0 01-1-1v-3a1 1 0 011-1h3.586L15 12z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="codingQuestionText" class="text-xl text-gray-800 font-medium whitespace-pre-wrap"></p>
+                </div>
+
+                <div class="code-editor-container mb-6">
+                    <select id="codingLanguageSelector" class="language-selector">
+                        <option value="auto">Detect Language</option>
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <!-- Add more languages as needed -->
+                    </select>
+                    <textarea id="codeEditor" placeholder="Write your code here..."></textarea>
+                </div>
+
+                <div class="flex justify-between gap-4">
+                    <button type="button" id="runCodeButton"
+                        class="flex-1 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
+                        Run Code
+                    </button>
+                    <button type="button" id="submitCodeButton"
+                        class="flex-1 flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 ease-in-out transform hover:scale-105">
+                        Submit Code
+                    </button>
+                </div>
+                <div id="codeOutput"
+                    class="mt-4 p-4 bg-gray-800 text-gray-100 rounded-lg font-mono text-sm whitespace-pre-wrap hidden">
+                </div>
+            </div>
+        </div>
+
+        <!-- Coding Feedback Screen (NEW) -->
+        <div id="codingFeedbackScreen"
+            class="hidden bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl border border-gray-200">
+                <div class="mb-6 p-6 bg-gray-50 rounded-lg border border-gray-200 shadow-inner">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-3">Coding Feedback:</h2>
+                    <p class="text-lg text-gray-700 mb-2">Your Code:</p>
+                    <pre id="userCodeDisplay"
+                        class="bg-gray-800 text-gray-100 p-3 rounded-lg text-sm overflow-auto max-h-48 whitespace-pre-wrap"></pre>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">AI Analysis:</h3>
+                        <p id="codingFeedbackText" class="text-gray-700 leading-relaxed whitespace-pre-wrap"></p>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <p class="text-xl font-bold text-gray-800">Score: <span id="codingScoreDisplay"
+                                class="text-purple-700 text-3xl"></span> / 10</p>
+                    </div>
+                </div>
+                <button id="nextCodingQuestionButton"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
+                    Next Coding Problem
+                </button>
+                <button id="endCodingInterviewButton"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300 ease-in-out transform hover:scale-105 mt-4">
+                    End Coding Interview
+                </button>
+            </div>
+        </div>
+
+
+        <div id="quizScreen"
+            class="hidden bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl border border-gray-200">
+                <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+                    <span id="currentDifficultyDisplay" class="capitalize text-indigo-600"></span> <span
+                        id="currentLanguageDisplay" class="text-purple-600"></span> Interview
+                </h2>
+                <div class="mb-6 p-6 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-lg font-semibold text-indigo-800">Question:</p>
+                        <button id="voiceButton" onclick="readQuestion()" class="voice-button"
+                            title="Listen to question">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 14.142M5 15l4-4h3.586a1 1 0 00.707-.293l4-4a1 1 0 011.414 0l4 4a1 1 0 00.707.293H20v1a1 1 0 01-1 1h-3.586l-4 4a1 1 0 01-.707.293H7a1 1 0 01-1-1v-3a1 1 0 011-1h3.586L15 12z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <p id="questionText" class="text-xl text-gray-800 font-medium"></p>
+                </div>
+
+                <form id="answerForm" class="space-y-4 mb-6">
+                    <div id="optionsContainer" class="space-y-3">
+                    </div>
+                    <button type="submit" id="submitAnswerButton"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 ease-in-out transform hover:scale-105">
+                        Submit Answer
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="feedbackScreen"
+            class="hidden bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl border border-gray-200">
+                <div class="mb-6 p-6 bg-gray-50 rounded-lg border border-gray-200 shadow-inner">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-3">Your Result:</h2>
+                    <p class="text-lg text-gray-700 mb-2">Your Answer: <span id="userAnswerDisplay"
+                            class="font-medium text-indigo-700"></span></p>
+                    <p class="text-lg text-gray-700 mb-2">Correct Answer: <span id="correctAnswerDisplay"
+                            class="font-medium text-green-700"></span></p>
+                    <div class="mt-4">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">AI Feedback:</h3>
+                        <p id="feedbackText" class="text-gray-700 leading-relaxed whitespace-pre-wrap"></p>
+                    </div>
+                </div>
+                <button id="nextQuestionButton"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 ease-in-out transform hover:scale-105">
+                    Next Question
+                </button>
+                <button id="endInterviewButton"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-300 ease-in-out transform hover:scale-105 mt-4">
+                    End Interview
+                </button>
+            </div>
+        </div>
+
+        <div id="resultsScreen"
+            class="hidden bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center p-4">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-3xl border border-gray-200">
+                <div class="mb-6 p-6 bg-green-50 rounded-lg border border-green-200 shadow-inner">
+                    <h2 class="text-2xl font-bold text-center text-green-800 mb-4">Interview Summary</h2>
+                    <p class="text-lg text-gray-700 mb-2">Total Questions Attempted: <span id="finalTotalQuestions"
+                            class="font-semibold text-gray-900"></span></p>
+                    <p class="text-lg text-gray-700 mb-2">Correct Answers: <span id="finalCorrectAnswers"
+                            class="font-semibold text-green-700"></span></p>
+                    <p class="text-lg text-gray-700 mb-2">Average Time per Question: <span id="finalAverageTime"
+                            class="font-semibold text-gray-900"></span> seconds</p>
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <p class="text-xl font-bold text-gray-800">Overall Score: <span id="finalOverallScore"
+                                class="text-purple-700 text-3xl"></span> / 10</p>
+                    </div>
+                </div>
+                <button id="startNewInterviewButton"
+                    class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-md text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-300 ease-in-out transform hover:scale-105">
+                    Start New Interview
+                </button>
+            </div>
+        </div>
+
+        <div id="loadingIndicator"
+            class="text-center text-indigo-500 font-medium mt-8 hidden bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen flex items-center justify-center">
+            <div
+                class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm border border-gray-200 flex items-center justify-center">
+                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-500" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                    </path>
+                </svg>
+                Generating...
+            </div>
+        </div>
+
+        <div id="messageBox" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <p id="messageText" class="text-lg font-medium text-gray-800 mb-4"></p>
+                <button id="messageBoxClose"
+                    class="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg">OK</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showHomePage() {
+            stopSpeech(); // Stop any ongoing speech
+            document.getElementById('home-page').classList.remove('hidden');
+            document.getElementById('module-page').classList.add('hidden');
+            languageSelectionScreen.classList.add('hidden');
+            languageLevelSelectionScreen.classList.add('hidden');
+            behavioralTopicSelectionScreen.classList.add('hidden');
+            behavioralLevelSelectionScreen.classList.add('hidden');
+            systemDesignTopicSelectionScreen.classList.add('hidden');
+            systemDesignLevelSelectionScreen.classList.add('hidden');
+            codingLanguageSelectionScreen.classList.add('hidden'); // NEW
+            codingLevelSelectionScreen.classList.add('hidden'); // NEW
+            codingQuizScreen.classList.add('hidden'); // NEW
+            codingFeedbackScreen.classList.add('hidden'); // NEW
+            quizScreen.classList.add('hidden');
+            feedbackScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+            messageBox.classList.add('hidden');
+        }
+
+        function showModulePage() {
+            stopSpeech(); // Stop any ongoing speech
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('module-page').classList.remove('hidden');
+            languageSelectionScreen.classList.add('hidden');
+            languageLevelSelectionScreen.classList.add('hidden');
+            behavioralTopicSelectionScreen.classList.add('hidden');
+            behavioralLevelSelectionScreen.classList.add('hidden');
+            systemDesignTopicSelectionScreen.classList.add('hidden');
+            systemDesignLevelSelectionScreen.classList.add('hidden');
+            codingLanguageSelectionScreen.classList.add('hidden'); // NEW
+            codingLevelSelectionScreen.classList.add('hidden'); // NEW
+            codingQuizScreen.classList.add('hidden'); // NEW
+            codingFeedbackScreen.classList.add('hidden'); // NEW
+            quizScreen.classList.add('hidden');
+            feedbackScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+            messageBox.classList.add('hidden');
+        }
+
+        const languageSelectionScreen = document.getElementById('languageSelectionScreen');
+        const languageLevelSelectionScreen = document.getElementById('languageLevelSelectionScreen');
+        const behavioralTopicSelectionScreen = document.getElementById('behavioralTopicSelectionScreen');
+        const behavioralLevelSelectionScreen = document.getElementById('behavioralLevelSelectionScreen');
+        const systemDesignTopicSelectionScreen = document.getElementById('systemDesignTopicSelectionScreen');
+        const systemDesignLevelSelectionScreen = document.getElementById('systemDesignLevelSelectionScreen');
+        const codingLanguageSelectionScreen = document.getElementById('codingLanguageSelectionScreen'); // NEW
+        const codingLevelSelectionScreen = document.getElementById('codingLevelSelectionScreen'); // NEW
+        const codingQuizScreen = document.getElementById('codingQuizScreen'); // NEW
+        const codingFeedbackScreen = document.getElementById('codingFeedbackScreen'); // NEW
+
+        const quizScreen = document.getElementById('quizScreen');
+        const feedbackScreen = document.getElementById('feedbackScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const messageBox = document.getElementById('messageBox');
+        const messageBoxClose = document.getElementById('messageBoxClose');
+        const messageText = document.getElementById('messageText');
+
+        const languageOptionsContainer = document.getElementById('languageOptionsContainer');
+        const technicalDifficultyOptionsContainer = document.getElementById('technicalDifficultyOptionsContainer');
+        const behavioralTopicOptionsContainer = document.getElementById('behavioralTopicOptionsContainer');
+        const behavioralDifficultyOptionsContainer = document.getElementById('behavioralDifficultyOptionsContainer');
+        const systemDesignTopicOptionsContainer = document.getElementById('systemDesignTopicOptionsContainer');
+        const systemDesignDifficultyOptionsContainer = document.getElementById('systemDesignDifficultyOptionsContainer');
+        const codingLanguageOptionsContainer = document.getElementById('codingLanguageOptionsContainer'); // NEW
+        const codingDifficultyOptionsContainer = document.getElementById('codingDifficultyOptionsContainer'); // NEW
+
+        const selectedLanguageTitle = document.getElementById('selectedLanguageTitle');
+        const selectedLanguageSubtitle = document.getElementById('selectedLanguageSubtitle');
+        const selectedBehavioralTopicTitle = document.getElementById('selectedBehavioralTopicTitle');
+        const selectedBehavioralTopicSubtitle = document.getElementById('selectedBehavioralTopicSubtitle');
+        const selectedSystemDesignTopicTitle = document.getElementById('selectedSystemDesignTopicTitle');
+        const selectedSystemDesignTopicSubtitle = document.getElementById('selectedSystemDesignTopicSubtitle');
+        const selectedCodingLanguageTitle = document.getElementById('selectedCodingLanguageTitle'); // NEW
+        const selectedCodingLanguageSubtitle = document.getElementById('selectedCodingLanguageSubtitle'); // NEW
+
+        const currentDifficultyDisplay = document.getElementById('currentDifficultyDisplay');
+        const currentLanguageDisplay = document.getElementById('currentLanguageDisplay');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const answerForm = document.getElementById('answerForm');
+        const submitAnswerButton = document.getElementById('submitAnswerButton');
+
+        const userAnswerDisplay = document.getElementById('userAnswerDisplay');
+        const correctAnswerDisplay = document.getElementById('correctAnswerDisplay');
+        const feedbackText = document.getElementById('feedbackText');
+        const nextQuestionButton = document.getElementById('nextQuestionButton');
+        const endInterviewButton = document.getElementById('endInterviewButton');
+
+        const finalTotalQuestions = document.getElementById('finalTotalQuestions');
+        const finalCorrectAnswers = document.getElementById('finalCorrectAnswers');
+        const finalAverageTime = document.getElementById('finalAverageTime');
+        const finalOverallScore = document.getElementById('finalOverallScore');
+        const startNewInterviewButton = document.getElementById('startNewInterviewButton');
+
+        // Coding specific elements
+        const codingQuestionText = document.getElementById('codingQuestionText'); // NEW
+        const codeEditor = document.getElementById('codeEditor'); // NEW
+        const codingLanguageSelector = document.getElementById('codingLanguageSelector'); // NEW
+        const runCodeButton = document.getElementById('runCodeButton'); // NEW
+        const submitCodeButton = document.getElementById('submitCodeButton'); // NEW
+        const codeOutput = document.getElementById('codeOutput'); // NEW
+        const userCodeDisplay = document.getElementById('userCodeDisplay'); // NEW
+        const codingFeedbackText = document.getElementById('codingFeedbackText'); // NEW
+        const codingScoreDisplay = document.getElementById('codingScoreDisplay'); // NEW
+        const nextCodingQuestionButton = document.getElementById('nextCodingQuestionButton'); // NEW
+        const endCodingInterviewButton = document.getElementById('endCodingInterviewButton'); // NEW
+        const currentCodingDifficultyDisplay = document.getElementById('currentCodingDifficultyDisplay'); // NEW
+        const currentCodingLanguageDisplay = document.getElementById('currentCodingLanguageDisplay'); // NEW
+
+
+        let currentQuestion = null;
+        let currentOptions = [];
+        let correctOptionIndex = -1;
+        let selectedModuleType = ''; // 'technical', 'behavioral', 'system-design', 'coding'
+        let selectedTopic = ''; // For behavioral/system design, this is the specific topic
+        let selectedLanguage = ''; // For technical/coding, this is the language
+        let currentDifficulty = '';
+        let askedQuestions = [];
+        let questionStartTime = 0;
+        let sessionQuestionStats = [];
+        let currentQuestionNumber = 0;
+        const MAX_QUESTIONS_PER_ROUND = 5; // Changed to 5 for coding round
+
+        const IDEAL_TIME_PER_QUESTION = 20;
+        const MAX_ACCEPTABLE_TIME = 60;
+        const ACCURACY_WEIGHT = 0.7;
+        const SPEED_WEIGHT = 0.3;
+
+        const APPS_SCRIPT_WEB_APP_URL = 'APPS_SCRIPT_WEB_APP_URL'; // <--- REPLACE THIS LINE WITH YOUR REAL URL!
+        console.log("Current APPS_SCRIPT_WEB_APP_URL:", APPS_SCRIPT_WEB_APP_URL);
+
+        // Text-to-Speech functionality
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+
+        function readQuestion() {
+            const questionTextElement = document.getElementById('questionText');
+            const voiceButton = document.getElementById('voiceButton');
+            const questionContent = questionTextElement.textContent || questionTextElement.innerText;
+
+            if (!questionContent.trim()) {
+                console.warn('No question text to read');
+                return;
+            }
+
+            // Stop any currently playing speech
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                voiceButton.classList.remove('speaking');
+                return;
+            }
+
+            // Create new utterance
+            currentUtterance = new SpeechSynthesisUtterance(questionContent);
+
+            // Configure speech settings
+            currentUtterance.rate = 0.8; // Slightly slower for better comprehension
+            currentUtterance.pitch = 1;
+            currentUtterance.volume = 0.8;
+
+            // Try to use a preferred voice (English)
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice =>
+                voice.lang.startsWith('en') && voice.name.includes('Google')
+            ) || voices.find(voice => voice.lang.startsWith('en'));
+
+            if (preferredVoice) {
+                currentUtterance.voice = preferredVoice;
+            }
+
+            // Add event listeners
+            currentUtterance.onstart = function () {
+                voiceButton.classList.add('speaking');
+                console.log('Speech started');
+            };
+
+            currentUtterance.onend = function () {
+                voiceButton.classList.remove('speaking');
+                console.log('Speech ended');
+            };
+
+            currentUtterance.onerror = function (event) {
+                voiceButton.classList.remove('speaking');
+                console.error('Speech error:', event.error);
+            };
+
+            // Start speaking
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        function readCodingQuestion() {
+            const codingQuestionTextElement = document.getElementById('codingQuestionText');
+            const codingVoiceButton = document.getElementById('codingVoiceButton');
+            const questionContent = codingQuestionTextElement.textContent || codingQuestionTextElement.innerText;
+
+            if (!questionContent.trim()) {
+                console.warn('No coding question text to read');
+                return;
+            }
+
+            // Stop any currently playing speech
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                codingVoiceButton.classList.remove('speaking');
+                return;
+            }
+
+            // Create new utterance
+            currentUtterance = new SpeechSynthesisUtterance(questionContent);
+
+            // Configure speech settings
+            currentUtterance.rate = 0.8; // Slightly slower for better comprehension
+            currentUtterance.pitch = 1;
+            currentUtterance.volume = 0.8;
+
+            // Try to use a preferred voice (English)
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice =>
+                voice.lang.startsWith('en') && voice.name.includes('Google')
+            ) || voices.find(voice => voice.lang.startsWith('en'));
+
+            if (preferredVoice) {
+                currentUtterance.voice = preferredVoice;
+            }
+
+            // Add event listeners
+            currentUtterance.onstart = function () {
+                codingVoiceButton.classList.add('speaking');
+                console.log('Coding speech started');
+            };
+
+            currentUtterance.onend = function () {
+                codingVoiceButton.classList.remove('speaking');
+                console.log('Coding speech ended');
+            };
+
+            currentUtterance.onerror = function (event) {
+                codingVoiceButton.classList.remove('speaking');
+                console.error('Coding speech error:', event.error);
+            };
+
+            // Start speaking
+            speechSynthesis.speak(currentUtterance);
+        }
+
+        // Load voices when they become available
+        speechSynthesis.onvoiceschanged = function () {
+            console.log('Voices loaded:', speechSynthesis.getVoices().length);
+        };
+
+        // Stop speech when navigating away from quiz screen
+        function stopSpeech() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+                const voiceButton = document.getElementById('voiceButton');
+                const codingVoiceButton = document.getElementById('codingVoiceButton');
+                if (voiceButton) {
+                    voiceButton.classList.remove('speaking');
+                }
+                if (codingVoiceButton) {
+                    codingVoiceButton.classList.remove('speaking');
+                }
+            }
+        }
+
+        // Data structure for languages and their levels (for Technical and Coding)
+        const technicalLanguages = [
+            {
+                name: "JavaScript",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1200px-Unofficial_JavaScript_logo_2.svg.png",
+                levels: {
+                    easy: "Basic syntax, DOM manipulation, fundamental concepts.",
+                    medium: "Closures, prototypes, async JS, common design patterns.",
+                    hard: "Advanced topics, performance optimization, complex algorithms."
+                }
+            },
+            {
+                name: "Python",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png",
+                levels: {
+                    easy: "Basic syntax, data types, control flow.",
+                    medium: "Decorators, generators, OOP, common libraries.",
+                    hard: "Concurrency, advanced data structures, system design with Python."
+                }
+            },
+            {
+                name: "Java",
+                img: "https://upload.wikimedia.org/wikipedia/en/thumb/3/30/Java_programming_language_logo.svg/1200px-Java_programming_language_logo.svg.png",
+                levels: {
+                    easy: "Basic syntax, OOP fundamentals, collections.",
+                    medium: "Multithreading, generics, design patterns, Spring basics.",
+                    hard: "JVM internals, performance tuning, distributed systems."
+                }
+            },
+            {
+                name: "C++",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/1200px-ISO_C%2B%2B_Logo.svg.png",
+                levels: {
+                    easy: "Basic syntax, pointers, arrays, functions.",
+                    medium: "OOP, STL, memory management, templates.",
+                    hard: "Concurrency, low-level programming, system-level design."
+                }
+            },
+            {
+                name: "DSA",
+                img: "https://1.bp.blogspot.com/-yUXjPoLcdjI/YDBkLIrMzGI/AAAAAAAAFuI/TotCgg3fILAek81jfyODLren8Kw_tp5WgCLcBGAsYHQ/s16000/DSA_MitgliedCCI-1170x555.jpg",
+                levels: {
+                    easy: "Arrays, linked lists, basic sorting/searching.",
+                    medium: "Trees, graphs, dynamic programming, advanced algorithms.",
+                    hard: "Complex algorithm design, competitive programming problems."
+                }
+            },
+            {
+                name: "SQL",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Sql_data_base_with_logo.png/1200px-Sql_data_base_with_logo.png",
+                levels: {
+                    easy: "Basic SELECT, WHERE, ORDER BY, JOINs.",
+                    medium: "Subqueries, aggregate functions, window functions, stored procedures.",
+                    hard: "Query optimization, database design, complex analytical queries."
+                }
+            },
+            {
+                "name": "HTML/CSS",
+                "img": "https://cloud2data.com/wp-content/uploads/2023/01/HTML-CSS-Review.png",
+                "levels": {
+                    "easy": "Basic HTML document structure, common tags (headings, paragraphs, links, images), semantic HTML5. CSS selectors, basic properties (color, font, background), box model.",
+                    "medium": "HTML forms, tables, media elements. Flexbox, basic Grid layout, positioning (static, relative, absolute, fixed), transitions, responsive design basics (media queries).",
+                    "hard": "ARIA attributes, accessibility best practices, performance optimization (lazy loading images, etc.), advanced semantic structuring in HTML. Advanced Grid layouts, animations, transformations, SASS/LESS preprocessors, CSS variables, BEM methodology, advanced responsive design techniques."
+                }
+            },
+            {
+                "name": "DBMS",
+                "img": "https://thumbs.dreamstime.com/z/round-linear-concept-dbms-vector-database-management-system-isolated-illustration-outline-icons-blue-yellow-colors-98958295.jpg",
+                "levels": {
+                    "easy": "Relational model, basic SQL queries (SELECT, INSERT, UPDATE, DELETE), primary/foreign keys.",
+                    "medium": "Joins, subqueries, aggregate functions, views, normalization (1NF, 2NF, 3NF), basic indexing.",
+                    "hard": "Transactions (ACID properties), stored procedures, triggers, advanced indexing strategies, database security, NoSQL concepts, database optimization techniques."
+                }
+            },
+            {
+                "name": "AI/ML",
+                "img": "https://erode-sengunthar.ac.in/wp-content/uploads/2024/02/aiml-image-1.png",
+                "levels": {
+                    "easy": "Introduction to AI/ML concepts, types of learning (supervised, unsupervised), simple linear regression, k-nearest neighbors.",
+                    "medium": "Logistic regression, decision trees, support vector machines (SVM), introduction to neural networks, basic clustering algorithms (K-Means).",
+                    "hard": "Reinforcement learning, model deployment (MLOps), ethical considerations in AI."
+                }
+            },
+            {
+                "name": "DL",
+                "img": "https://img.freepik.com/premium-vector/deep-learning-line-icon-ai-artificial-intelligence_8071-60112.jpg?w=2000",
+                "levels": {
+                    "easy": "Fundamentals of neural networks, perceptrons, activation functions, backpropagation basics, introduction to frameworks like TensorFlow/PyTorch.",
+                    "medium": "Convolutional Neural Networks (CNNs) for image processing, Recurrent Neural Networks (RNNs) for sequential data, Long Short-Term Memory (LSTM) networks, transfer learning.",
+                    "hard": "Transformer networks, Generative Adversarial Networks (GANs), advanced CNN architectures (e.g., ResNet, Inception), advanced RNNs (e.g., attention mechanisms), model optimization and deployment strategies for deep learning."
+                }
+            }
+        ];
+
+        // Data structure for coding languages and their levels (subset of technical for now)
+        const codingLanguages = [
+            {
+                name: "Python",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png",
+                levels: {
+                    easy: "Basic array/string manipulation, simple loops, conditional statements.",
+                    medium: "Basic data structures (lists, dictionaries), recursion, sorting/searching algorithms.",
+                    hard: "Advanced data structures (trees, graphs), dynamic programming, complex algorithms."
+                }
+            },
+            {
+                name: "JavaScript",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1200px-Unofficial_JavaScript_logo_2.svg.png",
+                levels: {
+                    easy: "Basic array/string methods, simple functions, DOM manipulation.",
+                    medium: "Closures, prototypes, asynchronous JavaScript, common array methods.",
+                    hard: "Advanced algorithms, performance optimization, complex data structures."
+                }
+            },
+            {
+                name: "Java",
+                img: "https://upload.wikimedia.org/wikipedia/en/thumb/3/30/Java_programming_language_logo.svg/1200px-Java_programming_language_logo.svg.png",
+                levels: {
+                    easy: "Basic class/object concepts, loops, arrays.",
+                    medium: "Collections, basic recursion, simple data structures.",
+                    hard: "Advanced algorithms, object-oriented design, concurrency."
+                }
+            },
+            {
+                name: "C++",
+                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/1200px-ISO_C%2B%2B_Logo.svg.png",
+                levels: {
+                    easy: "Basic syntax, arrays, pointers, functions.",
+                    medium: "STL containers, basic algorithms, memory management.",
+                    hard: "Advanced data structures, complex algorithms, performance considerations."
+                }
+            }
+        ];
+
+
+        // Data structure for behavioral topics and their levels
+        const behavioralTopics = [
+            {
+                name: "STAR Method Practice",
+                img: "https://th.bing.com/th/id/OIP.4xHQ0nC4WOrRWkra7woPcwHaF7?w=191&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+                levels: {
+                    easy: "Focus on structuring simple experiences using STAR.",
+                    medium: "Handling more complex scenarios, refining details and impact.",
+                    hard: "Addressing challenging questions, demonstrating self-awareness and growth."
+                }
+            },
+            {
+                name: "Teamwork Scenarios",
+                img: "https://th.bing.com/th/id/OIP.FsPZ_6S3miBQjVxlls9Y6QHaH0?w=160&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+                levels: {
+                    easy: "Describing positive team experiences and contributions.",
+                    medium: "Discussing conflict resolution and collaboration challenges.",
+                    hard: "Leading team initiatives, handling difficult team dynamics."
+                }
+            },
+            {
+                name: "Leadership Challenges",
+                img: "https://th.bing.com/th/id/OIP.lEBPiesR4XlKrZUErzwtwQHaDt?w=300&h=174&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3",
+                levels: {
+                    easy: "Examples of taking initiative or guiding small tasks.",
+                    medium: "Situations requiring decision-making and motivating others.",
+                    hard: "Overcoming significant obstacles, inspiring change, strategic leadership."
+                }
+            }
+        ];
+
+        // Data structure for system design topics and their levels
+        const systemDesignTopics = [
+            {
+                name: "Application Architecture",
+                img: "https://www.collidu.com/media/catalog/product/img1/5/b/5b776af5a15a1bddc6d56cdacad5fafcf5023835322565fe80b0fd620cb84ead/software-architecture-slide3.png",
+                levels: {
+                    easy: "Designing simple web applications, basic components.",
+                    medium: "Scalable web services, microservices concepts, database choices.",
+                    hard: "Distributed systems, fault tolerance, consistency models, complex integrations."
+                }
+            },
+            {
+                name: "Performance Optimization",
+                img: "https://tse1.mm.bing.net/th/id/OIP.7vvE1M2AlKxgluWWaXK95wHaDt?rs=1&pid=ImgDetMain&o=7&rm=3",
+                levels: {
+                    easy: "Basic caching, simple database indexing, frontend optimizations.",
+                    medium: "Advanced caching strategies, load balancing, CDN usage, query optimization.",
+                    hard: "Real-time data processing, distributed tracing, bottleneck identification in large systems."
+                }
+            },
+            {
+                name: "Component Design",
+                img: "https://cdn-gcp.new.marutitech.com/large_2d22592a_drawbacks_of_component_based_2x_1_b3ccf528b3.png",
+                levels: {
+                    easy: "Designing reusable UI components, basic API contracts.",
+                    medium: "Designing complex, stateful components, inter-component communication.",
+                    hard: "Designing highly extensible and maintainable component libraries, design systems."
+                }
+            }
+        ];
+
+
+        function showMessage(message) {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden');
+        }
+
+        messageBoxClose.addEventListener('click', () => {
+            messageBox.classList.add('hidden');
+        });
+
+        function showScreen(screenId) {
+            stopSpeech(); // Stop any ongoing speech
+            // Hide all main screens first
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('module-page').classList.add('hidden');
+            languageSelectionScreen.classList.add('hidden');
+            languageLevelSelectionScreen.classList.add('hidden');
+            behavioralTopicSelectionScreen.classList.add('hidden');
+            behavioralLevelSelectionScreen.classList.add('hidden');
+            systemDesignTopicSelectionScreen.classList.add('hidden');
+            systemDesignLevelSelectionScreen.classList.add('hidden');
+            codingLanguageSelectionScreen.classList.add('hidden'); // NEW
+            codingLevelSelectionScreen.classList.add('hidden'); // NEW
+            codingQuizScreen.classList.add('hidden'); // NEW
+            codingFeedbackScreen.classList.add('hidden'); // NEW
+            quizScreen.classList.add('hidden');
+            feedbackScreen.classList.add('hidden');
+            resultsScreen.classList.add('hidden');
+            loadingIndicator.classList.add('hidden');
+
+            // Show the target screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+            } else {
+                console.error(`Error: Screen with ID '${screenId}' not found. Please ensure your HTML has all required IDs.`);
+            }
+        }
+
+        // --- Technical Round Functions ---
+        function showTechnicalLanguageSelection() {
+            languageOptionsContainer.innerHTML = ''; // Clear previous options
+            technicalLanguages.forEach(lang => {
+                const langCard = document.createElement('div');
+                langCard.className = 'language-module-card bg-gray-50 rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                langCard.innerHTML = `
+                    <img src="${lang.img}" alt="${lang.name} Logo" class="h-24 mx-auto mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">${lang.name}</h3>
+                    <button
+                        class="language-button w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+                        data-language="${lang.name}"
+                    >
+                        Select
+                    </button>
+                `;
+                languageOptionsContainer.appendChild(langCard);
+            });
+
+            languageOptionsContainer.querySelectorAll('.language-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedLanguage = button.dataset.language;
+                    showTechnicalLanguageLevels(selectedLanguage);
+                });
+            });
+
+            showScreen('languageSelectionScreen');
+        }
+
+        function showTechnicalLanguageLevels(language) {
+            selectedLanguage = language;
+            selectedModuleType = 'technical';
+
+            selectedLanguageTitle.textContent = language;
+            selectedLanguageSubtitle.textContent = language;
+            technicalDifficultyOptionsContainer.innerHTML = '';
+
+            const langData = technicalLanguages.find(l => l.name === language);
+
+            if (langData && langData.levels) {
+                Object.keys(langData.levels).forEach(level => {
+                    const levelDescription = langData.levels[level];
+                    const levelCard = document.createElement('div');
+                    levelCard.className = 'module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                    levelCard.innerHTML = `
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 capitalize">${level} Questions</h3>
+                        <p class="text-gray-600 mb-6">${levelDescription}</p>
+                        <button
+                            class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300"
+                            data-difficulty="${level}"
+                        >
+                            Start ${level} Interview
+                        </button>
+                    `;
+                    technicalDifficultyOptionsContainer.appendChild(levelCard);
+                });
+
+                technicalDifficultyOptionsContainer.querySelectorAll('.btn-primary').forEach(button => {
+                    button.addEventListener('click', () => {
+                        startInterview(button.dataset.difficulty);
+                    });
+                });
+            } else {
+                showMessage(`No difficulty levels found for ${language}.`);
+                showTechnicalLanguageSelection();
+                return;
+            }
+
+            showScreen('languageLevelSelectionScreen');
+        }
+
+        // --- Behavioral Round Functions ---
+        function showBehavioralTopicSelection() {
+            behavioralTopicOptionsContainer.innerHTML = '';
+            behavioralTopics.forEach(topic => {
+                const topicCard = document.createElement('div');
+                topicCard.className = 'behavioral-module-card bg-gray-50 rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                topicCard.innerHTML = `
+                    <img src="${topic.img}" alt="${topic.name}" class="h-24 mx-auto mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">${topic.name}</h3>
+                    <button
+                        class="behavioral-button w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+                        data-topic="${topic.name}"
+                    >
+                        Select
+                    </button>
+                `;
+                behavioralTopicOptionsContainer.appendChild(topicCard);
+            });
+
+            behavioralTopicOptionsContainer.querySelectorAll('.behavioral-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedTopic = button.dataset.topic;
+                    showBehavioralLevels(selectedTopic);
+                });
+            });
+
+            showScreen('behavioralTopicSelectionScreen');
+        }
+
+        function showBehavioralLevels(topic) {
+            selectedTopic = topic;
+            selectedModuleType = 'behavioral';
+
+            selectedBehavioralTopicTitle.textContent = topic;
+            selectedBehavioralTopicSubtitle.textContent = topic;
+            behavioralDifficultyOptionsContainer.innerHTML = '';
+
+            const topicData = behavioralTopics.find(t => t.name === topic);
+
+            if (topicData && topicData.levels) {
+                Object.keys(topicData.levels).forEach(level => {
+                    const levelDescription = topicData.levels[level];
+                    const levelCard = document.createElement('div');
+                    levelCard.className = 'module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                    levelCard.innerHTML = `
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 capitalize">${level} Questions</h3>
+                        <p class="text-gray-600 mb-6">${levelDescription}</p>
+                        <button
+                            class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300"
+                            data-difficulty="${level}"
+                        >
+                            Start ${level} Interview
+                        </button>
+                    `;
+                    behavioralDifficultyOptionsContainer.appendChild(levelCard);
+                });
+
+                behavioralDifficultyOptionsContainer.querySelectorAll('.btn-primary').forEach(button => {
+                    button.addEventListener('click', () => {
+                        startInterview(button.dataset.difficulty);
+                    });
+                });
+            } else {
+                showMessage(`No difficulty levels found for ${topic}.`);
+                showBehavioralTopicSelection();
+                return;
+            }
+
+            showScreen('behavioralLevelSelectionScreen');
+        }
+
+        // --- System Design Round Functions ---
+        function showSystemDesignTopicSelection() {
+            systemDesignTopicOptionsContainer.innerHTML = '';
+            systemDesignTopics.forEach(topic => {
+                const topicCard = document.createElement('div');
+                topicCard.className = 'system-design-module-card bg-gray-50 rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                topicCard.innerHTML = `
+                    <img src="${topic.img}" alt="${topic.name}" class="h-24 mx-auto mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">${topic.name}</h3>
+                    <button
+                        class="system-design-button w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+                        data-topic="${topic.name}"
+                    >
+                        Select
+                    </button>
+                `;
+                systemDesignTopicOptionsContainer.appendChild(topicCard);
+            });
+
+            systemDesignTopicOptionsContainer.querySelectorAll('.system-design-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedTopic = button.dataset.topic;
+                    showSystemDesignLevels(selectedTopic);
+                });
+            });
+
+            showScreen('systemDesignTopicSelectionScreen');
+        }
+
+        function showSystemDesignLevels(topic) {
+            selectedTopic = topic;
+            selectedModuleType = 'system-design';
+
+            selectedSystemDesignTopicTitle.textContent = topic;
+            selectedSystemDesignTopicSubtitle.textContent = topic;
+            systemDesignDifficultyOptionsContainer.innerHTML = '';
+
+            const topicData = systemDesignTopics.find(t => t.name === topic);
+
+            if (topicData && topicData.levels) {
+                Object.keys(topicData.levels).forEach(level => {
+                    const levelDescription = topicData.levels[level];
+                    const levelCard = document.createElement('div');
+                    levelCard.className = 'module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                    levelCard.innerHTML = `
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 capitalize">${level} Questions</h3>
+                        <p class="text-gray-600 mb-6">${levelDescription}</p>
+                        <button
+                            class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300"
+                            data-difficulty="${level}"
+                        >
+                            Start ${level} Interview
+                        </button>
+                    `;
+                    systemDesignDifficultyOptionsContainer.appendChild(levelCard);
+                });
+
+                systemDesignDifficultyOptionsContainer.querySelectorAll('.btn-primary').forEach(button => {
+                    button.addEventListener('click', () => {
+                        startInterview(button.dataset.difficulty);
+                    });
+                });
+            } else {
+                showMessage(`No difficulty levels found for ${topic}.`);
+                showSystemDesignTopicSelection();
+                return;
+            }
+
+            showScreen('systemDesignLevelSelectionScreen');
+        }
+
+        // --- Coding Round Functions (NEW) ---
+        function showCodingLanguageSelection() {
+            codingLanguageOptionsContainer.innerHTML = ''; // Clear previous options
+            codingLanguages.forEach(lang => {
+                const langCard = document.createElement('div');
+                langCard.className = 'coding-module-card bg-gray-50 rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                langCard.innerHTML = `
+                    <img src="${lang.img}" alt="${lang.name} Logo" class="h-24 mx-auto mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">${lang.name}</h3>
+                    <button
+                        class="coding-language-button w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400"
+                        data-language="${lang.name}"
+                    >
+                        Select
+                    </button>
+                `;
+                codingLanguageOptionsContainer.appendChild(langCard);
+            });
+
+            codingLanguageOptionsContainer.querySelectorAll('.coding-language-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    selectedLanguage = button.dataset.language;
+                    showCodingLevels(selectedLanguage);
+                });
+            });
+
+            showScreen('codingLanguageSelectionScreen');
+        }
+
+        function showCodingLevels(language) {
+            selectedLanguage = language;
+            selectedModuleType = 'coding';
+
+            selectedCodingLanguageTitle.textContent = language;
+            selectedCodingLanguageSubtitle.textContent = language;
+            codingDifficultyOptionsContainer.innerHTML = '';
+
+            const langData = codingLanguages.find(l => l.name === language);
+
+            if (langData && langData.levels) {
+                Object.keys(langData.levels).forEach(level => {
+                    const levelDescription = langData.levels[level];
+                    const levelCard = document.createElement('div');
+                    levelCard.className = 'module-card bg-white rounded-xl shadow-md overflow-hidden transition-all-300 p-6';
+                    levelCard.innerHTML = `
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3 capitalize">${level} Problems</h3>
+                        <p class="text-gray-600 mb-6">${levelDescription}</p>
+                        <button
+                            class="btn-primary text-white font-semibold w-full py-3 px-4 rounded-lg shadow transition-all-300"
+                            data-difficulty="${level}"
+                        >
+                            Start ${level} Coding Interview
+                        </button>
+                    `;
+                    codingDifficultyOptionsContainer.appendChild(levelCard);
+                });
+
+                codingDifficultyOptionsContainer.querySelectorAll('.btn-primary').forEach(button => {
+                    button.addEventListener('click', () => {
+                        startCodingInterview(button.dataset.difficulty);
+                    });
+                });
+            } else {
+                showMessage(`No difficulty levels found for ${language}.`);
+                showCodingLanguageSelection();
+                return;
+            }
+
+            showScreen('codingLevelSelectionScreen');
+        }
+
+        async function startCodingInterview(difficulty) {
+            currentDifficulty = difficulty;
+            selectedModuleType = 'coding'; // Ensure module type is set for coding
+            if (currentCodingDifficultyDisplay) currentCodingDifficultyDisplay.textContent = difficulty;
+            if (currentCodingLanguageDisplay) currentCodingLanguageDisplay.textContent = selectedLanguage;
+
+            currentQuestionNumber = 0;
+            sessionQuestionStats = [];
+            askedQuestions = [];
+            fetchCodingQuestion();
+        }
+
+        async function fetchCodingQuestion() {
+            if (currentQuestionNumber >= MAX_QUESTIONS_PER_ROUND) {
+                showResults(); // Use the same results screen for now
+                return;
+            }
+
+            showScreen('loadingIndicator');
+            try {
+                const response = await fetch(APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        type: 'generateCodingQuestion', // NEW type
+                        language: selectedLanguage,
+                        difficulty: currentDifficulty,
+                        excludeQuestions: JSON.stringify(askedQuestions)
+                    }).toString(),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(`Error generating coding question: ${data.error}`);
+                    showCodingLanguageSelection();
+                    return;
+                }
+
+                currentQuestion = data.question; // This will be the coding problem description
+
+                if (!currentQuestion) {
+                    showMessage('Received invalid coding question data from AI. Please try again or check Apps Script logs for issues with JSON parsing or API response structure.');
+                    showCodingLanguageSelection();
+                    return;
+                }
+
+                askedQuestions.push(currentQuestion);
+                currentQuestionNumber++;
+
+                displayCodingQuestion();
+                questionStartTime = new Date().getTime();
+                showScreen('codingQuizScreen');
+
+            } catch (error) {
+                console.error('Error fetching coding question:', error);
+                showMessage(`Failed to get coding question: ${error.message}. Please check console for details.`);
+                showCodingLanguageSelection();
+            }
+        }
+
+        function displayCodingQuestion() {
+            if (codingQuestionText) codingQuestionText.textContent = currentQuestion;
+            if (codeEditor) codeEditor.value = ''; // Clear previous code
+            if (codeOutput) {
+                codeOutput.textContent = '';
+                codeOutput.classList.add('hidden');
+            }
+            // Reset language selector to auto-detect or default to selected language
+            codingLanguageSelector.value = 'auto';
+            // You might want to pre-fill the editor with a basic function signature based on selectedLanguage
+            // For example:
+            // if (selectedLanguage === 'Python') codeEditor.value = 'def solve():\n    # Your code here\n    pass';
+            // else if (selectedLanguage === 'JavaScript') codeEditor.value = 'function solve() {\n  // Your code here\n}';
+        }
+
+        runCodeButton.addEventListener('click', async () => {
+            const userCode = codeEditor.value;
+            const detectedLanguage = codingLanguageSelector.value === 'auto' ? detectLanguage(userCode) : codingLanguageSelector.value;
+
+            if (!userCode.trim()) {
+                showMessage('Please write some code to run.');
+                return;
+            }
+
+            showScreen('loadingIndicator');
+            try {
+                const response = await fetch(APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        type: 'runCode', // NEW type
+                        code: userCode,
+                        language: detectedLanguage,
+                        question: currentQuestion // Provide context for execution
+                    }).toString(),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(`Error running code: ${data.error}`);
+                    showScreen('codingQuizScreen');
+                    return;
+                }
+
+                if (codeOutput) {
+                    codeOutput.textContent = data.output || data.errorOutput || 'No output.';
+                    codeOutput.classList.remove('hidden');
+                    codeOutput.style.color = data.errorOutput ? '#EF4444' : '#ABB2BF'; // Red for error, default for success
+                }
+                showScreen('codingQuizScreen'); // Stay on the coding screen
+
+            } catch (error) {
+                console.error('Error running code:', error);
+                showMessage(`Failed to run code: ${error.message}.`);
+                showScreen('codingQuizScreen');
+            }
+        });
+
+        submitCodeButton.addEventListener('click', async () => {
+            const userCode = codeEditor.value;
+            const detectedLanguage = codingLanguageSelector.value === 'auto' ? detectLanguage(userCode) : codingLanguageSelector.value;
+            const timeTaken = (new Date().getTime() - questionStartTime) / 1000;
+
+            if (!userCode.trim()) {
+                showMessage('Please write some code to submit.');
+                return;
+            }
+
+            showScreen('loadingIndicator');
+            try {
+                const response = await fetch(APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        type: 'evaluateCodingAnswer', // NEW type
+                        question: currentQuestion,
+                        userCode: userCode,
+                        language: detectedLanguage,
+                        difficulty: currentDifficulty
+                    }).toString(),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(`Error evaluating code: ${data.error}`);
+                    showScreen('codingQuizScreen');
+                    return;
+                }
+
+                const { feedbackText: aiFeedback, score } = data;
+
+                if (aiFeedback === undefined || score === undefined) {
+                    showMessage('Received invalid feedback data from AI. Please try again or check Apps Script logs for issues with JSON parsing or API response structure.');
+                    showScreen('codingQuizScreen');
+                    return;
+                }
+
+                sessionQuestionStats.push({
+                    isCorrect: score >= 7, // Consider a score of 7 or higher as "correct" for summary
+                    timeTaken: timeTaken,
+                    score: score
+                });
+
+                displayCodingFeedback(userCode, aiFeedback, score);
+                showScreen('codingFeedbackScreen');
+
+            } catch (error) {
+                console.error('Error submitting code:', error);
+                showMessage(`Failed to submit code: ${error.message}.`);
+                showScreen('codingQuizScreen');
+            }
+        });
+
+        function displayCodingFeedback(userCode, aiFeedback, score) {
+            if (userCodeDisplay) userCodeDisplay.textContent = userCode;
+            if (codingFeedbackText) codingFeedbackText.textContent = aiFeedback;
+            if (codingScoreDisplay) codingScoreDisplay.textContent = score;
+        }
+
+        nextCodingQuestionButton.addEventListener('click', () => {
+            fetchCodingQuestion();
+        });
+
+        endCodingInterviewButton.addEventListener('click', showResults);
+
+
+        // Basic language detection (can be improved)
+        function detectLanguage(code) {
+            if (code.includes('def ') || code.includes('import ') || code.includes('print(')) {
+                return 'python';
+            }
+            if (code.includes('function ') || code.includes('const ') || code.includes('let ') || code.includes('console.log(')) {
+                return 'javascript';
+            }
+            if (code.includes('public class ') || code.includes('System.out.println(')) {
+                return 'java';
+            }
+            if (code.includes('#include') || code.includes('std::cout')) {
+                return 'cpp';
+            }
+            return 'unknown'; // Default or handle as needed
+        }
+
+
+        // --- Core Interview Logic (for MCQ) ---
+        function startInterview(difficulty) {
+            currentDifficulty = difficulty;
+            // currentModuleType is already set by the calling function (e.g., showTechnicalLanguageLevels)
+
+            // Set currentLanguageDisplay based on selectedModuleType
+            if (selectedModuleType === 'technical') {
+                if (currentLanguageDisplay) currentLanguageDisplay.textContent = selectedLanguage;
+            } else { // Behavioral or System Design
+                if (currentLanguageDisplay) currentLanguageDisplay.textContent = selectedTopic;
+            }
+
+            currentQuestionNumber = 0;
+            sessionQuestionStats = [];
+            askedQuestions = [];
+            fetchQuestion();
+        }
+
+        async function fetchQuestion() {
+            if (currentQuestionNumber >= MAX_QUESTIONS_PER_ROUND) {
+                showResults();
+                return;
+            }
+
+            showScreen('loadingIndicator');
+            try {
+                if (APPS_SCRIPT_WEB_APP_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL_HERE' || !APPS_SCRIPT_WEB_APP_URL.startsWith('http')) {
+                    throw new Error('Please update the APPS_SCRIPT_WEB_APP_URL variable in the JavaScript code with your deployed Google Apps Script Web App URL. Refer to the comments in the code for detailed steps.');
+                }
+
+                const response = await fetch(APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        type: 'generateQuestion',
+                        moduleType: selectedModuleType,
+                        language: selectedLanguage, // Will be empty for behavioral/system design
+                        topic: selectedTopic, // Will be empty for technical
+                        difficulty: currentDifficulty,
+                        excludeQuestions: JSON.stringify(askedQuestions)
+                    }).toString(),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(`Error generating question: ${data.error}`);
+                    // Go back to the appropriate selection screen based on module type
+                    if (selectedModuleType === 'technical') showTechnicalLanguageSelection();
+                    else if (selectedModuleType === 'behavioral') showBehavioralTopicSelection();
+                    else if (selectedModuleType === 'system-design') showSystemDesignTopicSelection();
+                    return;
+                }
+
+                currentQuestion = data.question;
+                currentOptions = data.options;
+                correctOptionIndex = data.correctAnswerIndex;
+
+                if (!currentQuestion || !Array.isArray(currentOptions) || currentOptions.length === 0 || correctOptionIndex === undefined) {
+                    showMessage('Received invalid question data from AI. Please try again or check Apps Script logs for issues with JSON parsing or API response structure.');
+                    if (selectedModuleType === 'technical') showTechnicalLanguageSelection();
+                    else if (selectedModuleType === 'behavioral') showBehavioralTopicSelection();
+                    else if (selectedModuleType === 'system-design') showSystemDesignTopicSelection();
+                    return;
+                }
+
+                askedQuestions.push(currentQuestion);
+                currentQuestionNumber++;
+
+                displayQuestion();
+                questionStartTime = new Date().getTime();
+                showScreen('quizScreen');
+
+            } catch (error) {
+                console.error('Error fetching question:', error);
+                showMessage(`Failed to get question: ${error.message}. Please check console for details and ensure your Apps Script is deployed correctly with 'Anyone' access.`);
+                if (selectedModuleType === 'technical') showTechnicalLanguageSelection();
+                else if (selectedModuleType === 'behavioral') showBehavioralTopicSelection();
+                else if (selectedModuleType === 'system-design') showSystemDesignTopicSelection();
+            }
+        }
+
+        function displayQuestion() {
+            if (questionText) questionText.textContent = currentQuestion;
+            if (optionsContainer) optionsContainer.innerHTML = '';
+
+            currentOptions.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition duration-200';
+                optionDiv.innerHTML = `
+                    <input type="radio" id="option${index}" name="answer" value="${index}" class="form-radio text-indigo-600">
+                    <label for="option${index}" class="ml-3 text-lg text-gray-800 flex-grow cursor-pointer">${option}</label>
+                `;
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            const radioButtons = document.querySelectorAll('input[name="answer"]');
+            radioButtons.forEach(radio => radio.checked = false);
+        }
+
+        async function submitAnswer() {
+            const selectedOption = document.querySelector('input[name="answer"]:checked');
+            if (!selectedOption) {
+                showMessage('Please select an answer before submitting.');
+                return;
+            }
+
+            const userAnswerIndex = parseInt(selectedOption.value);
+            const timeTaken = (new Date().getTime() - questionStartTime) / 1000;
+
+            showScreen('loadingIndicator');
+
+            try {
+                const response = await fetch(APPS_SCRIPT_WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        type: 'evaluateAnswer',
+                        moduleType: selectedModuleType,
+                        question: currentQuestion,
+                        options: JSON.stringify(currentOptions),
+                        correctAnswerIndex: correctOptionIndex,
+                        userAnswerIndex: userAnswerIndex,
+                        language: selectedLanguage, // Will be empty for behavioral/system design
+                        topic: selectedTopic, // Will be empty for technical
+                        difficulty: currentDifficulty
+                    }).toString(),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    showMessage(`Error evaluating answer: ${data.error}`);
+                    showScreen('quizScreen');
+                    return;
+                }
+
+                const { isCorrect, feedbackText: aiFeedback } = data;
+
+                if (isCorrect === undefined || aiFeedback === undefined) {
+                    showMessage('Received invalid feedback data from AI. Please try again or check Apps Script logs for issues with JSON parsing or API response structure.');
+                    showScreen('quizScreen');
+                    return;
+                }
+
+                sessionQuestionStats.push({
+                    isCorrect: isCorrect,
+                    timeTaken: timeTaken
+                });
+
+                displayFeedback(userAnswerIndex, isCorrect, aiFeedback);
+                showScreen('feedbackScreen');
+
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                showMessage(`Failed to submit answer: ${error.message}. Please check console for details.`);
+                showScreen('quizScreen');
+            }
+        }
+
+        function displayFeedback(userAnswerIndex, isCorrect, aiFeedback) {
+            if (userAnswerDisplay) {
+                userAnswerDisplay.textContent = currentOptions[userAnswerIndex];
+                userAnswerDisplay.style.color = isCorrect ? '#10B981' : '#EF4444';
+            }
+            if (correctAnswerDisplay) correctAnswerDisplay.textContent = currentOptions[correctOptionIndex];
+            if (feedbackText) feedbackText.textContent = aiFeedback;
+        }
+
+        function showResults() {
+            let totalCorrect = 0;
+            let totalTime = 0;
+            let totalScore = 0; // For coding round, sum up scores
+
+            sessionQuestionStats.forEach(stat => {
+                if (selectedModuleType === 'coding') {
+                    totalScore += stat.score || 0; // Sum scores for coding
+                } else {
+                    if (stat.isCorrect) {
+                        totalCorrect++;
+                    }
+                }
+                totalTime += stat.timeTaken;
+            });
+
+            const totalQuestionsAttempted = sessionQuestionStats.length;
+            const averageTime = totalQuestionsAttempted > 0 ? (totalTime / totalQuestionsAttempted) : 0;
+
+            let overallScore = 0;
+            if (selectedModuleType === 'coding') {
+                overallScore = totalQuestionsAttempted > 0 ? (totalScore / totalQuestionsAttempted) : 0; // Average score for coding
+            } else {
+                let accuracyScore = 0;
+                if (totalQuestionsAttempted > 0) {
+                    accuracyScore = (totalCorrect / totalQuestionsAttempted) * 10;
+                }
+
+                let speedScore = 0;
+                if (totalQuestionsAttempted > 0) {
+                    if (averageTime <= IDEAL_TIME_PER_QUESTION) {
+                        speedScore = 10;
+                    } else if (averageTime >= MAX_ACCEPTABLE_TIME) {
+                        speedScore = 1;
+                    } else {
+                        speedScore = 10 - ((averageTime - IDEAL_TIME_PER_QUESTION) / (MAX_ACCEPTABLE_TIME - IDEAL_TIME_PER_QUESTION)) * 9;
+                        speedScore = Math.max(1, Math.min(10, speedScore));
+                    }
+                } else {
+                    speedScore = 1;
+                }
+                overallScore = Math.round((accuracyScore * ACCURACY_WEIGHT) + (speedScore * SPEED_WEIGHT));
+            }
+
+            if (finalTotalQuestions) finalTotalQuestions.textContent = totalQuestionsAttempted;
+            if (finalCorrectAnswers) finalCorrectAnswers.textContent = totalCorrect; // This might be less relevant for coding
+            if (finalAverageTime) finalAverageTime.textContent = averageTime.toFixed(2);
+            if (finalOverallScore) finalOverallScore.textContent = overallScore.toFixed(1); // Display average score for coding
+
+            showScreen('resultsScreen');
+        }
+
+        answerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            submitAnswer();
+        });
+
+        nextQuestionButton.addEventListener('click', () => {
+            if (currentQuestionNumber < MAX_QUESTIONS_PER_ROUND) {
+                fetchQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        endInterviewButton.addEventListener('click', showResults);
+
+        startNewInterviewButton.addEventListener('click', () => {
+            askedQuestions = [];
+            currentQuestionNumber = 0;
+            sessionQuestionStats = [];
+            selectedModuleType = '';
+            selectedTopic = '';
+            selectedLanguage = '';
+            currentDifficulty = '';
+            showModulePage();
+        });
+
+        // Entry points from Modules page
+        function startCombinedTechnicalInterview() {
+            showTechnicalLanguageSelection();
+        }
+
+        function startCombinedBehavioralInterview() {
+            showBehavioralTopicSelection();
+        }
+
+        function startCombinedSystemDesignInterview() {
+            showSystemDesignTopicSelection();
+        }
+
+        showHomePage();
+    </script>
+    <footer class="#747474">
+        <div class="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
+            <p class="mt-8 text-center text-base text-gray-400">
+                © 2025 AI Interview Coach. All rights reserved.
+            </p>
+        </div>
+    </footer>
+</body>
+
+</html>
